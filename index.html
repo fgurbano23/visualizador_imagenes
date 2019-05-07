@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html ng-app="App" ng-controller="Ctrl">
+
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js"></script>
+</head>
+
+<body>
+  <div class="container-fluid" >
+    <div class="row">
+      <br>
+      <div class="col-xs-8 col-md-8 col-lg-8">
+        <!--HEADER-->
+        <div class="image-wrapper-header">
+          <div class="text-center"></div>
+        </div>
+        <!--VISUALIZADOR-->
+        <div 
+          class="image-wrapper" 
+          data-spy="scroll" 
+          data-target="#myScrollspy" 
+          data-offset="40"
+          ondragstart="return false">
+            <img
+              class="image-no-select"
+              ondragstart="return false"
+              ng-dblclick="zoomIn()"
+              ng-class="{
+                'zoomx1': zoomImage == 1,
+                'zoomx2': zoomImage == 2,
+                'zoomx3': zoomImage == 3,
+              }"
+              ng-repeat="obj in data" 
+              id="{{obj.metadata.page}}" 
+              src="{{obj.img}}">
+        </div>
+        <!--FOOTER-->
+        <div class="image-wrapper-footer">
+          <div class="text-center page-guide">
+            {{currentImage +'/'+ data.length }}
+          </div>
+        </div>
+        <!--MINIATURAS-->
+          <div class="miniature-images">
+            <img
+              ondragstart="return false"
+              ng-class="{'active-image':obj.metadata.page == currentImage}"
+              ng-repeat="obj in data"
+              ng-click="goToPage(obj.metadata.page)"   
+              src="{{obj.img}}">
+          </div>
+      </div>
+
+      <!--OPCIONES DEL VISUALIZADOR-->
+      <div class=" col-xs-1 col-md-1 col-lg-1 no-margin">
+        <!--OPCIONES DE PAGINACION-->
+        <div class="image-options" id="myScrollspy">
+          <nav>
+            <ul class="nav nav-pills nav-stacked image-paginator" >
+              <li>
+                <button class="btn" 
+                  ng-disabled="currentImage == 1"
+                  ng-click="previousPages()"
+                  style="transform:rotate(180deg);">
+                  V
+                </button>
+              </li>
+
+              <div class="wrapper">
+                <ul class="image-paginator-inner" ng-style="translateY">
+                  <li 
+                    ng-repeat="obj in data"
+                    ng-class="{'active':obj.metadata.page == currentImage}">
+                      <a 
+                        ondragstart="return false"
+                        ng-click="goToPage(obj.metadata.page)" 
+                        href="{{'#'+obj.metadata.page}}">
+                        {{(obj.metadata.page)}}
+                      </a>
+                  </li>
+                </ul>
+              </div>
+
+               <li>
+                <button
+                  class="btn" 
+                  ng-disabled="currentImage == data.length"
+                  ng-click="nextPages()">
+                  V 
+                </button>
+              </li>
+
+            </ul>
+          </nav>
+        </div>
+        <br>
+        <!--OPCIONES DE ZOOM-->
+        <div class="image-options" id="myScrollspy">
+          <nav>
+            <ul class="nav nav-pills nav-stacked image-paginator">
+              <li>
+                <button
+                  class="btn"
+                  ng-disabled="zoomImage >= 3" 
+                  ng-click="zoomIn()">
+                  +
+                </button>
+              </li>
+              <li>
+                <button 
+                  class="btn" 
+                  ng-disabled="zoomImage == 0" 
+                  ng-click="zoomOut()">
+                  -
+                </button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+
+      <!--METADATA-->
+      <div class="col-xs-3 col-md-3 col-lg-3 image-metadata">
+        <h3>Metadata</h3>
+          <p ng-repeat="(key,value) in data[currentImage-1].metadata">
+            {{key+':'+value}}
+          </p>
+      </div>
+
+    </div>
+  </div>
+</body>
+
+</html>
